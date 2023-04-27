@@ -1,7 +1,7 @@
 {
-    "name": "elephantio/elephant.io",
+    "name": "aguetkriegerisch/elephant.io-custom",
     "type": "library",
-    "description": "Send events to a real time websocket engine through PHP",
+    "description": "Send events to a real time websocket engine through PHP, including customizable headers on handshake",
     "keywords": ["Nodejs", "WebSocket", "Dialog", "Real Time"],
     "license": "MIT",
     "homepage": "https://elephantio.github.io/elephant.io/",

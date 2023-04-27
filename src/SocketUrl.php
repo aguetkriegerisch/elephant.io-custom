@@ -21,6 +21,9 @@ use ElephantIO\Exception\MalformedUrlException;
  */
 class SocketUrl
 {
+    const PROTOCOL_TCP = 'tcp';
+    const PROTOCOL_SSL = 'ssl';
+
     /**
      * @var string
      */
@@ -108,6 +111,15 @@ class SocketUrl
      */
     public function getAddress()
     {
-        return sprintf('%s://%s', $this->parsed['secured'] ? 'ssl' : 'tcp', $this->getHost());
+        return sprintf('%s://%s', $this->getProtocol(), $this->getHost());
+    }
+
+    /* Get protocol to use
+    *
+    *  @return string
+    */
+    public function getProtocol()
+    {
+        return $this->parsed['secured'] ? static::PROTOCOL_SSL : static::PROTOCOL_TCP;
     }
 }

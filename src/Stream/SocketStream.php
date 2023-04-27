@@ -157,6 +157,8 @@ class SocketStream extends AbstractStream
         if (!is_resource($this->handle)) {
             return;
         }
+            
+        $this->logger->debug(sprintf('Request to uri: %s', $uri));
 
         $method     = isset($options['method']) ? $options['method'] : 'GET';
         $skip_body  = isset($options['skip_body']) ? $options['skip_body'] : false;

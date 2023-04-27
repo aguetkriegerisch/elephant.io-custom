@@ -335,6 +335,9 @@ class Version1X extends AbstractSocketIO
         if (isset($url['query']) && $url['query']) {
             $query = array_replace($query, $url['query']);
         }
+        if(isset($this->options['query'])){
+            $query = array_merge($query,$this->options['query']);
+        }
         return sprintf('/%s/?%s', trim($url['path'], '/'), http_build_query($query));
     }
 
@@ -413,7 +416,11 @@ class Version1X extends AbstractSocketIO
         if ($this->options['use_b64']) {
             $query['b64'] = 1;
         }
-        $uri = $this->getUri($query);
+        
+        // Set query value if provided before
+        $this->query = isset($this->query) ? array_merge($this->query,$query) : $query;
+
+        $uri = $this->getUri($this->query);
 
         $this->stream->request($uri, ['Connection: close']);
         if ($this->stream->getStatusCode() != 200) {

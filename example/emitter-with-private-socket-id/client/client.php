@@ -18,9 +18,9 @@ use Monolog\Handler\StreamHandler;
 require __DIR__ . '/../../../vendor/autoload.php';
 
 $version = Client::CLIENT_4X;
-$url = 'http://localhost:1337';
-$token = 'this_is_peter_token';
-$event = 'private_chat_message';
+$url = 'http://localhost:3500/ws/';
+$token = 'DFGER5ERTE7';
+$event = 'notify_client';
 
 $logfile = __DIR__ . '/socket.log';
 
@@ -29,16 +29,19 @@ if (is_readable($logfile)) {
 }
 // create a log channel
 $logger = new Logger('client');
-$logger->pushHandler(new StreamHandler($logfile, Level::Debug));
+$logger->pushHandler(new StreamHandler($logfile));
 
 echo sprintf("Creating first socket to %s\n", $url);
 // create first instance
 $client = new Client(Client::engine($version, $url, [
     'headers' => [
-        'X-My-Header: websocket rocks',
-        'Authorization: Bearer ' . $token,
-        'User: peter',
-    ]
+        'token: DFGER5ERTE7',
+        'Authorization: Bearer ' . $token
+    ],
+    'query' => [
+        'room'=>'user_3'
+    ],
+    'debug' => true
 ]), $logger);
 $client->initialize();
 

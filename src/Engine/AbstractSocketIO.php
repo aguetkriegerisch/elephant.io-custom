@@ -46,7 +46,9 @@ abstract class AbstractSocketIO implements EngineInterface
     /** @var mixed[] Array of default options for the engine */
     protected $defaults;
 
-    /** @var mixed[] Array of options for the engine */
+    /** @var mixed[] Array of options for the engine 
+     * options available: autoconnect, version, tansport, timeout, use_b64, max_payload, wait, context
+    */
     protected $options;
 
     /** @var \ElephantIO\StreamInterface Resource to the connected stream */
@@ -58,12 +60,21 @@ abstract class AbstractSocketIO implements EngineInterface
     /** @var mixed[] Array of php stream context options */
     protected $context = [];
 
+    /** @var mixed[] Array with custom headers */
+    protected $headers = [];
+
+    /** @var mixed[] Array of uri content */
+    protected $query = [];
+
     public function __construct($url, array $options = [])
     {
         $this->url = $url;
 
         if (isset($options['context'])) {
-            $this->context = $options['context'];
+            $this->headers = $options['headers'];
+            $this->query = $options['query'];
+            //$this->context = $options['context'];
+
             unset($options['context']);
         }
 
@@ -273,5 +284,18 @@ abstract class AbstractSocketIO implements EngineInterface
     public function getStream()
     {
         return $this->stream;
+    }
+
+    /**
+     * Set the context stream
+     *
+     * @return array mixed[]context stream for this engine
+     */
+    public function setContext($protocol,$headers){
+        if (!isset($this->context[$protocol])) {
+            $this->context[$protocol] = [];
+        }
+        $headers = isset($this->context[$protocol]['header']) ? $this->context[$protocol]['header'] : [];
+        $this->context[$protocol]['header'] = array_merge($headers, $this->headers);
     }
 }
