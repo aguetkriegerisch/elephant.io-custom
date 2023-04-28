@@ -104,10 +104,14 @@ class Version1X extends AbstractSocketIO
     public function wait($event)
     {
         while (true) {
+            $this->logger->debug(sprintf('init wait() loop for: %s', $event));
             if ($packet = $this->drain()) {
+                $this->logger->debug('executed drain()');
                 if ($packet->proto === static::PROTO_MESSAGE && $packet->type === static::PACKET_EVENT &&
                     $this->matchNamespace($packet->nsp) && $packet->event === $event) {
                     return $packet;
+                }else{
+                    $this->logger->debug('$packet not returned');
                 }
             }
         }
@@ -116,6 +120,7 @@ class Version1X extends AbstractSocketIO
     /** {@inheritDoc} */
     public function drain()
     {
+        $this->logger->debug('init drain()');
         if ($data = $this->read()) {
             $this->logger->debug(sprintf('Got data: %s', (string) $data));
             $packet = $this->decodePacket($data);
@@ -155,13 +160,13 @@ class Version1X extends AbstractSocketIO
         if (!$this->isConnected()) {
             return;
         }
-
         $payload = $this->getPayload($code, $message);
         if (count($fragments = $payload->encode()->getFragments()) > 1) {
             throw new RuntimeException(sprintf('Payload is exceed the maximum allowed length of %d!',
-                $this->options['max_payload']));
+            $this->options['max_payload']));
         }
         $bytes = $this->stream->write($fragments[0]);
+        $this->logger->debug(sprintf('Writing stream: %s', (string) $bytes));
         $this->session->resetHeartbeat();
 
         // wait a little bit of time after this message was sent

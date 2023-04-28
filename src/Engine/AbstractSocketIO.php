@@ -193,6 +193,7 @@ abstract class AbstractSocketIO implements EngineInterface
         if (!$this->stream || !$this->stream->connected()) {
             return;
         }
+        $this->logger->debug('Reading stream');
 
         /*
          * The first byte contains the FIN bit, the reserved bits, and the
